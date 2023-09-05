@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:local": "env-cmd -f .env.local node server.js",
-    "start": "env-cmd -f .env.production node server.js",
+    "start": "env-cmd -f .env.development node server.js",
     "test": "jest --verbose"
   },
   "author": "",
