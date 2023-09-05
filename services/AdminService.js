@@ -11,7 +11,12 @@ const checkUserCredentials = (user_id, password) => {
   const isValidPasswordCharacters =
     /^[a-z0-9!"#$%&'()*+,.\/:;<=>?@\[\]^_`{|}~-]*$/i.test(password);
 
-  return isValidUserIdLength && isValidCharacters && isValidPasswordLength && isValidPasswordCharacters;
+  return (
+    isValidUserIdLength &&
+    isValidCharacters &&
+    isValidPasswordLength &&
+    isValidPasswordCharacters
+  );
 };
 
 const signUp = async (req, res) => {
@@ -39,7 +44,7 @@ const signUp = async (req, res) => {
     if (err) {
       return res.status(500).json({ success: false, error: err });
     }
-    
+
     if (!result) {
       let newUser = new Admin({
         user_id,
@@ -78,7 +83,7 @@ const login = (req, res) => {
         user: user,
       });
     }
-    
+
     req.login(user, { session: false }, (err) => {
       if (err) {
         res.send(err);
@@ -175,17 +180,10 @@ const getUserById = (req, res) => {
   const {
     params: { user_id: requested_user_id },
   } = req;
-  
-  try {
-    const { decoded_user_id, decoded_password } = decodeAuthorizationPayload(req);
-    req.body.user_id = decoded_user_id;
-    req.body.password = decoded_password;
-  } catch (error) {
-    const response = {
-      message: "Get user failed",
-    };
-    return res.status(400).send(response);
-  }
+
+  const { decoded_user_id, decoded_password } = decodeAuthorizationPayload(req);
+  req.body.user_id = decoded_user_id;
+  req.body.password = decoded_password;
 
   const callbackFunction = () => getUserByIdAction(res, requested_user_id);
   authenticateCredentials(req, res, callbackFunction);
@@ -233,7 +231,7 @@ const getUserByIdAction = (res, requested_user_id) => {
     if (err) {
       return res.status(500).json({ success: false, error: err });
     }
-    
+
     if (!user) {
       const response = {
         message: "No User found",
@@ -313,7 +311,7 @@ const deleteUserByIdAction = (res, requested_user_id) => {
       };
       return res.status(500).json(response);
     }
-    
+
     const response = {
       message: "Account and User successfully removed",
     };
