@@ -159,12 +159,6 @@ const getUserById = (req, res) => {
     params: { user_id: requested_user_id },
   } = req;
   const { decoded_user_id, decoded_password } = decodeAuthorizationPayload(req);
-  if (requested_user_id !== decoded_user_id) {
-    const response = {
-      message: "No Permission for Update",
-    };
-    return res.status(403).send(response);
-  }
   req.body.user_id = decoded_user_id;
   req.body.password = decoded_password;
   const callbackFunction = () => getUserByIdAction(res, requested_user_id);
@@ -188,6 +182,12 @@ const updateUserById = (req, res) => {
     comment,
   };
   const { decoded_user_id, decoded_password } = decodeAuthorizationPayload(req);
+  if (requested_user_id !== decoded_user_id) {
+    const response = {
+      message: "No Permission for Update",
+    };
+    return res.status(403).send(response);
+  }
   req.body.user_id = decoded_user_id;
   req.body.password = decoded_password;
   const callbackFunction = () =>

@@ -55,7 +55,6 @@ passport.use(
       if (!user) {
         return callback(null, false, { message: Constant.USER_NOT_DETECTED });
       }
-      console.log(user);
       return callback(null, user, { message: Constant.USER_DETECTED });
     });
   })
