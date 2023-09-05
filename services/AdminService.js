@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const base64 = require("base-64");
 
 const signUp = async (req, res) => {
-  const { user_id, password } = req.body;
+  const { user_id, password, nickname, comment } = req.body;
   if (!(user_id && password)) {
     const response = {
       message: "Account creation failed",
@@ -41,15 +41,17 @@ const signUp = async (req, res) => {
         let newUser = new Admin({
           user_id,
           password,
+          nickname,
+          comment,
         });
         Admin.createAdmin(newUser, (err, user) => {
           if (err) throw err;
-          const token = jwt.sign({ id: user._id }, "your_jwt_secret");
           const response = {
             message: "Account successfully created",
             user: {
               user_id,
-              nickname: user_id,
+              nickname,
+              comment,
             },
           };
           return res.status(200).send(response);
@@ -170,14 +172,6 @@ const getUserById = (req, res) => {
 };
 
 const updateUserById = (req, res) => {
-  const { user_id, password } = req.body;
-  if (!(user_id && password)) {
-    const response = {
-      message: "Account creation failed",
-      cause: "required user_id and password",
-    };
-    return res.status(400).send(response);
-  }
   const {
     params: { user_id: requested_user_id },
   } = req;
@@ -203,6 +197,7 @@ const updateUserById = (req, res) => {
 
 const getUserByIdAction = (res, requested_user_id) => {
   Admin.findOne({ user_id: requested_user_id }, (err, user) => {
+    const { user_id, nickname, comment } = user;
     if (err) {
       return res.status(500).json({ success: false, error: err });
     }
@@ -215,9 +210,9 @@ const getUserByIdAction = (res, requested_user_id) => {
     const response = {
       message: "User details by user_id",
       user: {
-        user_id: user.user_id,
-        nickname: user.user_id,
-        comment: "I'm happy.",
+        user_id,
+        nickname,
+        comment,
       },
     };
     return res.status(200).send(response);
