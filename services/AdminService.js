@@ -150,8 +150,9 @@ const decodeAuthorizationPayload = (req) => {
   const decodedAuthorization = Buffer.from(authorization, "base64").toString(
     "utf-8"
   );
-  const decoded_user_id = decodedAuthorization.split(":")[0];
-  const decoded_password = decodedAuthorization.split(":")[1];
+  const decodedAuthorizationArray = decodedAuthorization.split(":");
+  const decoded_user_id = decodedAuthorizationArray[0];
+  const decoded_password = decodedAuthorizationArray[1];
 
   return { decoded_user_id, decoded_password };
 };
@@ -160,9 +161,17 @@ const getUserById = (req, res) => {
   const {
     params: { user_id: requested_user_id },
   } = req;
-  const { decoded_user_id, decoded_password } = decodeAuthorizationPayload(req);
-  req.body.user_id = decoded_user_id;
-  req.body.password = decoded_password;
+  try {
+    const { decoded_user_id, decoded_password } =
+      decodeAuthorizationPayload(req);
+    req.body.user_id = decoded_user_id;
+    req.body.password = decoded_password;
+  } catch (error) {
+    const response = {
+      message: "Get user failed",
+    };
+    return res.status(400).send(response);
+  }
   const callbackFunction = () => getUserByIdAction(res, requested_user_id);
   authenticateCredentials(req, res, callbackFunction);
 };
