@@ -147,7 +147,9 @@ const decodeAuthorizationPayload = (req) => {
   const {
     headers: { authorization },
   } = req;
-  const decodedAuthorization = base64.decode(authorization);
+  const decodedAuthorization = Buffer.from(authorization, "base64").toString(
+    "utf-8"
+  );
   const decoded_user_id = decodedAuthorization.split(":")[0];
   const decoded_password = decodedAuthorization.split(":")[1];
 
