@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  title: API
+  description: API Documentation
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3001/api
+    description: Development server
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: Admin
+    description: Special privelege
+
+paths:
+  # User API Endpoint
+  /admin/isloggedin:
+    get:
+      tags:
+        - User
+      security:
+        - JWTAuth: []
+      summary: Checks if a user is already logged in
+      responses:
+        '200':
+          description: Predicate for user login status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isLoggedIn:
+                    type: boolean
+                  message:
+                    type: string
+                    example: "Logged In"
+                  admin:
+                    $ref: "#/components/schemas/User"
+
+            
+
+
