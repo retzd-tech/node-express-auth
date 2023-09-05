@@ -4,9 +4,7 @@ const Admin = require("../models/admin");
 const Constant = require("../api/Constant");
 
 const passport = require("passport");
-const jwt = require("jsonwebtoken");
 const passportJWT = require("passport-jwt");
-const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const LocalStrategy = require("passport-local").Strategy;
 const JWTStrategy = passportJWT.Strategy;
@@ -24,7 +22,7 @@ const jwtOpts = {
 passport.use(
   new LocalStrategy(
     {
-      usernameField: "email",
+      usernameField: "user_id",
       passwordField: "password",
       session: false,
     },
@@ -80,6 +78,18 @@ router.post("/get-admin-id", function (req, res) {
 
 router.post("/signup", function (req, res) {
   AdminService.signUp(req, res);
+});
+
+router.get("/users/:user_id", function (req, res) {
+  AdminService.getUserById(req, res);
+});
+
+router.patch("/users/:user_id", function (req, res) {
+  AdminService.updateUserById(req, res);
+});
+
+router.close("/users/:user_id", function (req, res) {
+  AdminService.deleteUserById(req, res);
 });
 
 router.post("/isloggedin", function (req, res, next) {

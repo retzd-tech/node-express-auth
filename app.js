@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
   res.send('Development API is healthy');
 });
 
-app.use('/api/admin', adminRoutes);
+app.use('/', adminRoutes);
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
