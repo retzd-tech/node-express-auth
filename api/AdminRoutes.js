@@ -88,7 +88,7 @@ router.patch("/users/:user_id", function (req, res) {
   AdminService.updateUserById(req, res);
 });
 
-router.close("/users/:user_id", function (req, res) {
+router.post("/close", function (req, res) {
   AdminService.deleteUserById(req, res);
 });
 

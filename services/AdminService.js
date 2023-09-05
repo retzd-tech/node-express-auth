@@ -224,9 +224,9 @@ const getUserByIdAction = (res, requested_user_id) => {
   });
 };
 
-const deleteUserById = () => {
+const deleteUserById = (req, res) => {
   const {
-    params: { user_id: requested_user_id },
+    body: { user_id: requested_user_id },
   } = req;
   const { decoded_user_id, decoded_password } = decodeAuthorizationPayload(req);
   if (requested_user_id !== decoded_user_id) {
